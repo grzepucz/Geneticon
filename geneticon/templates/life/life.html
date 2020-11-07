@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block head %}
+    {% load static %}
+    <link href="{% static 'geneticon/css/life.css' %}" rel="stylesheet">
+    <title>Genetic Algorithm - Life preview</title>
+{% endblock %}
+
+{% block body %}
+<div class="life-configuration">
+    <div class="life-configuration__title">Your configuration</div>
+    <div class="life-configuration__description">Here are values You set in previous form. If You want to run 'the Life' click 'Live' button.</div>
+    <div class="life-configuration__properties">
+        {% include 'life/configuration.html' %}
+    </div>
+</div>
+{% endblock %}

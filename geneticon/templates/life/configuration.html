@@ -1,0 +1,48 @@
+{% if life is not null %}
+    <div class="property property__epoch">
+        {% if life.epochs is not null %}
+            <div class="property__label">Epoch number:</div><div class="property__value">{{ life.epochs }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__method">
+        {% if life.function is not null %}
+            <div class="property__label">Function:</div><div class="property__value">{{ life.function.name }}</div>
+            <div class="property__label">Function body:</div><div class="property__value">{{ life.function.body }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__population">
+        {% if life.population is not null %}
+            <div class="property__label">Population name:</div><div class="property__value">{{ life.population }}</div>
+            <div class="property__label">Population size:</div><div class="property__value">{{ life.population.size }}</div>
+            <div class="property__label">Population creation:</div><div class="property__value">{{ life.population.create_date }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__selection">
+        {% if life.selection is not null %}
+            <div class="property__label">Selection type:</div><div class="property__value">{{ life.selection.type }}</div>
+            <div class="property__label">Selection probability:</div><div class="property__value">{{ life.selection.probability }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__hybridization">
+        {% if life.hybridization is not null %}
+            <div class="property__label">Hybridization type:</div><div class="property__value">{{ life.hybridization.type }}</div>
+            <div class="property__label">Hybridization probability:</div><div class="property__value">{{ life.hybridization.probability }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__mutation">
+        {% if life.mutation is not null %}
+            <div class="property__label">Mutation type:</div><div class="property__value">{{ life.mutation.type }}</div>
+            <div class="property__label">Mutation probability:</div><div class="property__value">{{ life.mutation.probability }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__inversion">
+        {% if life.inversion is not null %}
+            <div class="property__label">Inversion probability</div><div class="property__value">{{ life.inversion.probability }}</div>
+        {% endif %}
+    </div>
+    <div class="property property__elite-strategy">
+        {% if life.elite_strategy is not null %}
+            <div class="property__label">Percent of subjects save to next generation</div><div class="property__value">{{ life.elite_strategy }}</div>
+        {% endif %}
+    </div>
+{% endif %}

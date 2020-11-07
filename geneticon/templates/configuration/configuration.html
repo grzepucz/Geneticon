@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="configuration">
+        <div class="configuration configuration__title">Configuration</div>
+        <div class="configuration configuration__description">To create population fill fields below with rational values.</div>
+        {% include 'configuration/population_form.html' %}
+    </div>
+    {% load static %}
+    <script src="{% static 'geneticon/js/form.js' %}" type="text/javascript"></script>
+{% endblock %}
