@@ -1,5 +1,5 @@
 <div>
-    <form action="/configuration" method="post" class="configuration configuration__form">
+    <form action="{% url 'configuration' %}" method="post" class="configuration configuration__form">
         {% csrf_token %}
         {{ population_form }}
         <input type="submit" value="Create" class="configuration__submit">

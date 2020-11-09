@@ -20,8 +20,9 @@ from geneticon.services import configuration
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('configuration', views.configuration),
+    path('configuration', views.configuration, name='configuration'),
     path('population', views.population),
-    path('life', views.life),
+    path('life/<int:life_id>', views.life),
+    path('life/<int:life_id>/analyze', views.life_analyze, name='life_analyze'),
     path('preconfigure', views.preconfigure),
 ]

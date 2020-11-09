@@ -8,7 +8,7 @@ class OptimizationMethod(models.Model):
     formula = models.Func()
     domain_minimum = models.FloatField(default=0)
     domain_maximum = models.FloatField(default=0)
-    body = models.CharField(max_length=250)
+    body = models.CharField(max_length=250, default='')
     pass
 
     def __str__(self):
@@ -78,12 +78,14 @@ class Life(models.Model):
     mutation = models.OneToOneField(Mutation, on_delete=models.CASCADE)
     inversion = models.OneToOneField(Inversion, on_delete=models.CASCADE)
     elite_strategy = models.FloatField(default=0)
+    precision = models.IntegerField(default=0)
     function = models.ForeignKey(OptimizationMethod, on_delete=models.CASCADE)
 
 
 class Subject(models.Model):
     name = models.CharField(max_length=30)
     population = models.ForeignKey(Population, on_delete=models.CASCADE)
+    generation = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name

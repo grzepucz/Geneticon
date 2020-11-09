@@ -8,6 +8,8 @@
         {% if life.function is not null %}
             <div class="property__label">Function:</div><div class="property__value">{{ life.function.name }}</div>
             <div class="property__label">Function body:</div><div class="property__value">{{ life.function.body }}</div>
+            <div class="property__label">Domain start:</div><div class="property__value">{{ life.function.domain_minimum }}</div>
+            <div class="property__label">Domain end:</div><div class="property__value">{{ life.function.domain_maximum }}</div>
         {% endif %}
     </div>
     <div class="property property__population">
@@ -15,12 +17,13 @@
             <div class="property__label">Population name:</div><div class="property__value">{{ life.population }}</div>
             <div class="property__label">Population size:</div><div class="property__value">{{ life.population.size }}</div>
             <div class="property__label">Population creation:</div><div class="property__value">{{ life.population.create_date }}</div>
+            <div class="property__label">Precision:</div><div class="property__value">{{ life.precision }}</div>
         {% endif %}
     </div>
     <div class="property property__selection">
         {% if life.selection is not null %}
             <div class="property__label">Selection type:</div><div class="property__value">{{ life.selection.type }}</div>
-            <div class="property__label">Selection probability:</div><div class="property__value">{{ life.selection.probability }}</div>
+            <div class="property__label">Selection setting:</div><div class="property__value">{{ life.selection.settings }}</div>
         {% endif %}
     </div>
     <div class="property property__hybridization">
@@ -44,5 +47,47 @@
         {% if life.elite_strategy is not null %}
             <div class="property__label">Percent of subjects save to next generation</div><div class="property__value">{{ life.elite_strategy }}</div>
         {% endif %}
+    </div>
+
+    <div class="generations">
+    {% if generations is not null %}
+        {% for generation in generations %}
+            {% if generation is not null %}
+            <div class="generation">
+                <div class="generation__header">Epoch: {{ forloop.counter }}</div>
+                <div class="generation__population--hidden">
+                    <div class="property property__header">
+                        <div class="property__label">Counter</div>
+                        <div class="property__label">Name</div>
+                        <div class="property__label">chromosome 1 bin</div>
+                        <div class="property__label">chromosome 1 dec</div>
+                        <div class="property__label">chromosome 2 bin</div>
+                        <div class="property__label">chromosome 2 dec</div>
+                        <div class="property__label">Function result</div>
+                    </div>
+                    {% for subject, chromosomes, function_value in generation %}
+                       <div class="property">
+                           <div class="property__index">{{ forloop.counter }}</div>
+                           <div class="property__label">{{ subject }}</div>
+                            {% for chromosome, value in chromosomes %}
+                                <div class="chromosome property__value">
+                                    {% for gene in chromosome|dictsort:'locus' %}
+                                        {{ gene.allel }}
+                                    {% endfor %}
+                                </div>
+                                <div class="chromosome property__value">{{ value }}</div>
+                            {% endfor %}
+                            <div class="chromosome property__value">{{ function_value }}</div>
+                       </div>
+                    {% empty %}
+                        <div>There is no subjects available.</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% empty %}
+            Sorry, generations are not available.
+        {% endfor %}
+    {% endif %}
     </div>
 {% endif %}

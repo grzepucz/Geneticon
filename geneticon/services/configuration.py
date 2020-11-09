@@ -1,11 +1,12 @@
+import inspect
 import json
 import random
 import string
-
 from django.http import HttpResponse
 from geneticon.models import OptimizationMethod, Population, Selection, Hybridization, Mutation, Inversion, Life, \
     Subject, Chromosome, Gene
-from .functions import BohachevskyFormula, BoothFormula
+from .functions import bohachevsky_formula, booth_formula
+from .generation import calculate_chromosome_size
 
 
 def create_gene(chromosome):
@@ -14,18 +15,23 @@ def create_gene(chromosome):
         gene.save()
 
 
-def create_chromosome(subject):
-    chromosome = Chromosome(size=25, subject=subject)
-    chromosome.save()
-    create_gene(chromosome)
+def create_chromosome(subject, function, precision, size=2):
+    chromosome_size = calculate_chromosome_size(function, precision)
+
+    for i in range(size):
+        chromosome = Chromosome(
+            size=chromosome_size,
+            subject=subject)
+        chromosome.save()
+        create_gene(chromosome)
 
 
-def create_subjects(population):
+def create_subjects(population, function, precision, generation=1):
     for i in range(int(population.size)):
-        subject = Subject(population=population)
+        subject = Subject(population=population, generation=generation)
         subject.name = ''.join(random.choice(string.ascii_lowercase) for j in range(10))
         subject.save()
-        create_chromosome(subject)
+        create_chromosome(subject, function, precision)
 
 
 def save_form_data(form):
@@ -56,7 +62,9 @@ def save_form_data(form):
     )
     population.save()
 
-    create_subjects(population)
+    function = OptimizationMethod.objects.get(id=form.data['optimization_function'])
+    precision = form.data['precision']
+    create_subjects(population, function, precision)
 
     life = Life(population=population,
                 epochs=form.data['epochs_number'],
@@ -65,7 +73,8 @@ def save_form_data(form):
                 mutation=mutation,
                 inversion=inversion,
                 elite_strategy=form.data['elite_strategy'],
-                function=OptimizationMethod.objects.get(id=form.data['optimization_function']))
+                precision=precision,
+                function=function)
     life.save()
 
     return life.id
@@ -78,7 +87,7 @@ def create_sample_configuration():
         domain_maximum=100,
         body='(x1^2) + (2 * (x2^2)) - (0.3 * cos(3 * pi * x1)) - (0.4 * cos(4 * pi * x2))',
         name='Bohachevsky')
-    bohachevsky.formula = BohachevskyFormula
+    bohachevsky.formula = inspect.getsource(bohachevsky_formula)
     bohachevsky.save()
 
     booth = OptimizationMethod(
@@ -87,7 +96,7 @@ def create_sample_configuration():
         domain_minimum=-10,
         domain_maximum=10,
         name='Booth')
-    booth.formula = BoothFormula
+    booth.formula = inspect.getsource(booth_formula)
     booth.save()
 
     selection = Selection(id=1, type='TOURNAMENT', settings=json.JSONEncoder().encode({'group_size': 4}))
@@ -105,10 +114,12 @@ def create_sample_configuration():
     population = Population(id=1, name='Test', size=12)
     population.save()
 
-    create_subjects(population)
+    function = OptimizationMethod.objects.get(id=1)
+    precision = 4
+    create_subjects(population, function, precision)
 
     life = Life(population=population,
-                generations=20,
+                epochs=20,
                 selection=selection,
                 hybridization=hybridization,
                 mutation=mutation,

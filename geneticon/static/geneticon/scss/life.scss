@@ -1,3 +1,122 @@
-.life {
+.life-configuration {
+  display: block;
+  width: 95%;
+  margin: 10px 50px;
+  padding-left: 10px;
+  padding-rigth: 10px;
+  height: auto;
+  position: relative;
 
+  &__title {
+    margin-top: 10px;
+    font-size: 20px;
+    position: relative;
+    text-transform: capitalize;
+  }
+
+  &__description {
+    font-size: 15px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  &__properties {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  }
+
+  .property {
+    padding: 10px 10px;
+    display: flex;
+    justify-content: center;
+
+    &:hover {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.19);
+      transition: box-shadow 0.2s;
+    }
+
+    &__header {
+      display: flex;
+      color: grey;
+      justify-content: flex-start;
+      text-transform: capitalize;
+    }
+
+    &__index {
+      opacity: 70%;
+      flex: 1;
+      margin-right: 5px;
+      margin-left: 5px;
+    }
+
+    &__label {
+      flex-direction: row;
+      flex: 2;
+      font-weight: bold;
+      margin-right: 5px;
+      text-transform: capitalize;
+    }
+
+    &__value {
+      white-space: nowrap;
+      line-break: loose;
+      max-width: 460px;
+      margin-left: 5px;
+      margin-right: 10px;
+      flex-direction: row;
+      flex: 3;
+    }
+  }
+}
+
+.generation {
+  &__header {
+    font-size: 20px;
+    padding: 10px;
+    border-top: azure 2px solid;
+    border-bottom: azure 2px solid;
+    text-transform: capitalize;
+
+    &:hover {
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.19);
+      background-color: azure;
+      transition: box-shadow 0.2s;
+      cursor: pointer;
+    }
+  }
+
+  &__population {
+    &--hidden {
+      transition: display 1s;
+      display: none;
+    }
+  }
+}
+
+.button {
+  max-width: 100px;
+  height: 60px;
+  transition-duration: 0.4s;
+  background: none;
+  justify-content: center;
+  margin: 15px;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  &__submit {
+    border-radius: 20px;
+    border: 2px solid #4CAF50;
+    padding-left: 30%;
+    padding-right: 30%;
+
+    &:hover {
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+  }
 }

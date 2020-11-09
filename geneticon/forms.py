@@ -15,6 +15,7 @@ class PopulationForm(forms.Form):
         choices=methods
     )
     epochs_number = forms.IntegerField(label='Epochs number')
+    precision = forms.IntegerField(label='Precision of result in digits after comma.')
     selection_type = forms.ChoiceField(
         label='Selection type',
         required=True,

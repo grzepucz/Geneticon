@@ -10,7 +10,12 @@
     <div class="life-configuration__title">Your configuration</div>
     <div class="life-configuration__description">Here are values You set in previous form. If You want to run 'the Life' click 'Live' button.</div>
     <div class="life-configuration__properties">
-        {% include 'life/configuration.html' %}
+        {% include 'life/configuration_extended.html' %}
     </div>
+    <a href="{% url 'life_analyze' life.id %}">
+        <button class="button button__submit">Live</button>
+    </a>
+
+    <script src="{% static 'geneticon/js/life.js' %}"></script>
 </div>
 {% endblock %}
