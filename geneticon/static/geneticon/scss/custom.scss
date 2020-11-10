@@ -18,6 +18,14 @@
   &:focus {
     outline: none;
   }
+
+  &--hidden {
+    display: none !important;
+  }
+}
+
+.hidden {
+  display: none !important;
 }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }

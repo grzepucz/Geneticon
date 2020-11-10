@@ -104,3 +104,6 @@ class Gene(models.Model):
     locus = models.IntegerField(default=0)
     chromosome = models.ForeignKey(Chromosome, on_delete=models.CASCADE)
     pass
+
+    def __str__(self):
+        return self.locus

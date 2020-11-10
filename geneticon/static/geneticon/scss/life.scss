@@ -96,6 +96,17 @@
   }
 }
 
+.manage-buttons {
+  display: flex;
+  flex-direction: row;
+  margin-left: 30%;
+  margin-right: 30%;
+
+  &--loading {
+    display: none;
+  }
+}
+
 .button {
   max-width: 100px;
   height: 60px;
@@ -114,16 +125,10 @@
     color: white;
   }
 
-  &__submit {
+  &__next {
     border-radius: 20px;
-    margin-left: 45%;
-    margin-right: 45%;
     border: grey 0 none;
-
-    &::before {
-      font-weight: bold;
-      content: "Next";
-    }
+    width: 100px;
 
     &:hover {
       box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
@@ -131,6 +136,30 @@
 
     &:focus {
       outline: none;
+    }
+
+    &::before {
+      font-weight: bold;
+      content: "Next";
+    }
+  }
+
+  &__live {
+    border-radius: 20px;
+    border: grey 0 none;
+    width: 100px;
+
+    &:hover {
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &::before {
+      font-weight: bold;
+      content: "Live";
     }
   }
 }

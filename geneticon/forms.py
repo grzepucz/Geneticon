@@ -7,7 +7,7 @@ class PopulationForm(forms.Form):
     population_size = forms.IntegerField(label='Population size', required=True)
     population_name = forms.CharField(label='Population name', required=True)
 
-    methods = [(model.id, model.name) for model in OptimizationMethod.objects.all()]
+    methods = [[model.id, model.name] for model in OptimizationMethod.objects.all()]
     optimization_function = forms.ChoiceField(
         label='Optimize function',
         required=True,

@@ -13,10 +13,11 @@
     <div class="life-configuration__properties">
         {% include 'life/configuration_extended.html' %}
     </div>
-{#    <a href="{% url 'epoch_analyze' life.id %}">#}
-        <button class="button button__submit"></button>
-{#    </a>#}
-
+    <div class="loader--hidden"></div>
+    <div class="manage-buttons">
+        <button class="button button__next"></button>
+        <button class="button button__live"></button>
+    </div>
     <script src="{% static 'geneticon/js/life.js' %}"></script>
 </div>
 {% endblock %}

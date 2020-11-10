@@ -1,5 +1,6 @@
 const header = $('.generation')
-const submit = $('.button__submit');
+const next = $('.button__next');
+const live = $('.button__live');
 
 const addClickExpandListener = (element) => {
     element.addEventListener('click', (event) => {
@@ -21,13 +22,14 @@ if (header.length) {
     header.each((index, element) => addClickExpandListener(element));
 }
 
-if (submit.length) {
-    const button = submit[0];
-    button.addEventListener('click', (event) => {
-        button.innerHTML = '';
-        button.className = 'loader';
-        button.disabled = true;
+if (next.length) {
+     next[0].addEventListener('click', (event) => {
+        let manageButtons = $('.manage-buttons');
+        let loader = $('.loader--hidden');
         let nextEpoch = $('.generation').length + 1;
+
+        manageButtons.addClass('hidden');
+        loader.addClass('loader').removeClass('loader--hidden');
 
         $.ajax({
             url: `${window.location.href}/epoch/${nextEpoch}`,
@@ -44,9 +46,48 @@ if (submit.length) {
                 console.log(error);
             },
             complete: () => {
-                button.className = 'button button__submit';
-                button.disabled = false;
+                manageButtons.removeClass('hidden');
+                loader.addClass('loader--hidden').removeClass('loader');
             }
         })
+    });
+}
+
+if (live.length) {
+    live[0].addEventListener('click', (event) => {
+        let manageButtons = $('.manage-buttons');
+        let loader = $('.loader--hidden');
+        let nextEpoch = $('.generation').length + 1;
+        let epochNumbers = $('.property__epoch').find('.property__value')[0]?.innerText
+
+        manageButtons.addClass('hidden');
+        loader.addClass('loader').removeClass('loader--hidden');
+
+        if (epochNumbers) {
+            const requestData = async (epoch, limit) => {
+                $.ajax({
+                    url: `${window.location.href}/epoch/${epoch}`,
+                    type: 'GET',
+                    success: (data) => {
+                        const serializer = new XMLSerializer();
+                        const xmlStr = serializer.serializeToString(data);
+                        const generations = $('.generations');
+                        generations.append(xmlStr);
+                        addClickExpandListener(generations.children().last()[0]);
+                    },
+                    error: (error) => {
+                        manageButtons.removeClass('hidden');
+                        loader.addClass('loader--hidden').removeClass('loader');
+                    },
+                    complete: async () => {
+                        if (epoch + 1 <= limit) {
+                            await requestData(epoch+1, limit);
+                        }
+                    }
+                });
+            }
+
+            requestData(nextEpoch, epochNumbers);
+        }
     });
 }

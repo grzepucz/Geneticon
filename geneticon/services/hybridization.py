@@ -9,22 +9,31 @@ from .inversion import inverse
 
 def create_subjects(reflect_offspring):
     offspring = []
-    # KLONOWANIE DO BAZY
+    for parent in reflect_offspring:
+        clone = Subject(name=parent.name, population=parent.population, generation=parent.generation+1)
+        clone.save()
+        for parent_chromosome in Chromosome.objects.filter(subject=parent):
+            chromosome = Chromosome(size=parent_chromosome.size, subject=clone)
+            chromosome.save()
+            for parent_gene in Gene.objects.filter(chromosome=parent_chromosome):
+                gene = Gene(allel=parent_gene.allel, locus=parent_gene.locus, chromosome=chromosome)
+                gene.save()
+        offspring.append(clone)
     return offspring
 
 
 def create_offspring(life_model, parents, generation):
     offspring = []
     if life_model.elite_strategy > 0:
-        offspring = create_subjects([parents[:math.ceil(life_model.elite_strategy * len(parents))]])
-    print('offspring')
-    print(offspring)
+        offspring = create_subjects(parents[:math.ceil(life_model.elite_strategy * len(parents))])
 
     for index in range(len(parents)):
         subject = parents[index]
         if random.random() < life_model.hybridization.probability:
             subject = crossover(parents, index, life_model, generation)
         if random.random() < life_model.mutation.probability:
+            print('zmutowano!')
+            print(subject)
             subject = mutate(life_model.mutation.type, subject)
         if random.random() < life_model.inversion.probability:
             subject = inverse(subject)
