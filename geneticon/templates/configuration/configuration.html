@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% block head %}
+    {% load static %}
+    <link href="{% static 'geneticon/css/form.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
     <div class="configuration">
         <div class="configuration configuration__title">Configuration</div>

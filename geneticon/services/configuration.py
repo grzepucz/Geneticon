@@ -1,37 +1,9 @@
 import inspect
 import json
-import random
-import string
 from django.http import HttpResponse
-from geneticon.models import OptimizationMethod, Population, Selection, Hybridization, Mutation, Inversion, Life, \
-    Subject, Chromosome, Gene
+from geneticon.models import OptimizationMethod, Population, Selection, Hybridization, Mutation, Inversion, Life
 from .functions import bohachevsky_formula, booth_formula
-from .generation import calculate_chromosome_size
-
-
-def create_gene(chromosome):
-    for i in range(chromosome.size):
-        gene = Gene(allel=round(random.random()), locus=i, chromosome=chromosome)
-        gene.save()
-
-
-def create_chromosome(subject, function, precision, size=2):
-    chromosome_size = calculate_chromosome_size(function, precision)
-
-    for i in range(size):
-        chromosome = Chromosome(
-            size=chromosome_size,
-            subject=subject)
-        chromosome.save()
-        create_gene(chromosome)
-
-
-def create_subjects(population, function, precision, generation=1):
-    for i in range(int(population.size)):
-        subject = Subject(population=population, generation=generation)
-        subject.name = ''.join(random.choice(string.ascii_lowercase) for j in range(10))
-        subject.save()
-        create_chromosome(subject, function, precision)
+from .generation import create_subjects
 
 
 def save_form_data(form):
