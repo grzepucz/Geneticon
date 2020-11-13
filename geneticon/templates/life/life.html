@@ -2,14 +2,20 @@
 {% block head %}
     {% load static %}
     <link href="{% static 'geneticon/css/life.css' %}" rel="stylesheet">
-    <link href="{% static 'geneticon/css/custom.css' %}" rel="stylesheet">
     <title>Genetic Algorithm - Life preview</title>
 {% endblock %}
 
 {% block body %}
 <div class="life-configuration">
-    <div class="life-configuration__title">Your configuration</div>
-    <div class="life-configuration__description">Here are values You set in previous form. If You want to run 'the Life' click 'Live' button.</div>
+    <div class="life-configuration__header">
+        <div class="life-configuration__header__title">Your configuration</div>
+        <a href="{% url 'life_clean' life.id %}"><div class="life-configuration__header__delete"></div></a>
+    </div>
+    <div class="life-configuration__description">
+        Here are values You set in previous form. If You want to run 'the Life' click 'Live' button or just iterate through next generations by clicking in next button.
+        Once You create generation it cannot be recreated.
+    </div>
+    {% if generation_time %}<div class="life-configuration__total_title">Creation of this init population took {{ generation_time }}</div>{% endif %}
     <div class="life-configuration__properties">
         {% include 'life/configuration_extended.html' %}
     </div>

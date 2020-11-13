@@ -1,4 +1,3 @@
-import json
 import math
 import random
 import string
@@ -6,22 +5,23 @@ import string
 from django.shortcuts import get_list_or_404
 from .selection import decode_chromosome_value, select_from_population
 from .hybridization import create_offspring
-from geneticon.models import Subject, Chromosome, Gene, Life, OptimizationMethod
+from geneticon.models import Subject, Chromosome, Gene, Life, OptimizationMethod, Epoch
 from geneticon.services.functions import get_formula_by_name
 
 
-def create_generation(life_model, generation):
-    ancestors = Subject.objects.filter(population=life_model.population, generation=generation-1)
+def create_generation(life_model, epoch):
+    previous_generation = Epoch.objects.get(life=life_model, number=epoch.number-1)
+    ancestors = Subject.objects.filter(population=life_model.population, epoch=previous_generation)
+    print('ancestors length')
+    print(len(ancestors))
     parents = select_from_population(life_model, ancestors)
-    return create_offspring(life_model, parents, generation)
+    print('parents length:')
+    print(len(parents))
+    return create_offspring(life_model, parents, epoch, len(ancestors))
 
 
-def get_generation(life_model, generation=1):
-    subjects = Subject.objects.filter(population=life_model.population, generation=generation)
-
-    if len(subjects) < 1:
-        return False
-
+def get_generation(life_model, epoch):
+    subjects = Subject.objects.filter(population=life_model.population, epoch=epoch)
     generation = []
     for subject in subjects:
         subject_chromosomes = Chromosome.objects.filter(subject=subject)
@@ -35,9 +35,10 @@ def get_generation(life_model, generation=1):
                 calculate_chromosome_size(life_model.function, life_model.precision))
             subject_genes.append((get_list_or_404(Gene, chromosome=chromosome), subject_genes_value))
 
-        formula = get_formula_by_name(life_model.function.name)
-        function_value = formula(subject_genes[0][1], subject_genes[1][1]) if len(subject_genes) else 'NaN'
-        generation.append((subject, subject_genes, function_value))
+        if len(subject_genes) == 2:
+            formula = get_formula_by_name(life_model.function.name)
+            function_value = formula(subject_genes[0][1], subject_genes[1][1]) if len(subject_genes) else 'NaN'
+            generation.append((subject, subject_genes, function_value))
     return sorted(generation, key=lambda x: x[2])
 
 
@@ -56,7 +57,7 @@ def chromosome_binary_to_number(genes):
 
 def create_gene(chromosome):
     for i in range(chromosome.size):
-        gene = Gene(allel=round(random.random()), locus=i, chromosome=chromosome)
+        gene = Gene(allel=round(random.random()), locus=i+1, chromosome=chromosome)
         gene.save()
 
 
@@ -71,9 +72,9 @@ def create_chromosome(subject, function, precision, size=2):
         create_gene(chromosome)
 
 
-def create_subjects(population, function, precision, generation=1):
+def create_subjects(population, function, precision, epoch):
     for i in range(int(population.size)):
-        subject = Subject(population=population, generation=generation)
+        subject = Subject(population=population, epoch=epoch)
         subject.name = ''.join(random.choice(string.ascii_lowercase) for j in range(10))
         subject.save()
         create_chromosome(subject, function, precision)

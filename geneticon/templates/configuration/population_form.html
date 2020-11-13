@@ -1,7 +1,7 @@
 <div>
-    <form action="{% url 'configuration' %}" method="post" class="configuration configuration__form">
+    <form action="{% url 'configuration' %}" method="post" class="configuration">
         {% csrf_token %}
-        {{ population_form }}
-        <input type="submit" value="Create" class="configuration__submit">
+        <div class="configuration__form">{{ population_form }}</div>
+        <input type="submit" class="configuration__submit">
     </form>
 </div>

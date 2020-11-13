@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    {% load static %}
+    <link href="{% static 'geneticon/css/home.css' %}" rel="stylesheet">
+    <title>Geneticon - Genetic Algorithms</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <div class="content__header">
+        <div class="content__header__title">Current lives</div>
+        <a href="{% url 'configuration' %}" class="content__header__create"></a>
+    </div>
+    <div class="content__lives">
+        {% for life in lives %}
+            <a href="{% url 'life' life.0 %}">
+                <div class="life">
+                    <div class="life__population">{{ life.1 }}</div>
+                    <div class="life__formula">{{ life.2 }}</div>
+                    <div class="life__date">{{ life.3 }}</div>
+                </div>
+            </a>
+        {% empty %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+<script type="text/javascript">
+    document.getElementsByClassName('content__header__create')[0].addEventListener('click', () => window.location = `{{ request.path }}/configuration`)
+</script>

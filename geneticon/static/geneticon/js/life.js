@@ -1,10 +1,11 @@
-const header = $('.generation')
+const header = $('.generation__header')
 const next = $('.button__next');
 const live = $('.button__live');
 
 const addClickExpandListener = (element) => {
+    let currentEpoch = $(element).parent();
+
     element.addEventListener('click', (event) => {
-        let currentEpoch = $(element);
         if (currentEpoch.hasClass('generation--extended')) {
             currentEpoch.removeClass('generation--extended');
             currentEpoch.find('.generation__population').each((ind, elem) => {
@@ -16,8 +17,9 @@ const addClickExpandListener = (element) => {
                 $(elem).addClass('generation__population').removeClass('generation__population--hidden');
             });
         }
-    })
+    });
 }
+
 if (header.length) {
     header.each((index, element) => addClickExpandListener(element));
 }
@@ -32,14 +34,14 @@ if (next.length) {
         loader.addClass('loader').removeClass('loader--hidden');
 
         $.ajax({
-            url: `${window.location.href}/epoch/${nextEpoch}`,
+            url: `${window.location.href.split('?')[0]}/epoch/${nextEpoch}`,
             type: 'GET',
             success: (data) => {
                 const serializer = new XMLSerializer();
                 const xmlStr = serializer.serializeToString(data);
                 const generations = $('.generations');
                 generations.append(xmlStr);
-                addClickExpandListener(generations.children().last()[0]);
+                addClickExpandListener(generations.children().last().find('.generation__header')[0]);
             },
             error: (error) => {
                 console.log('errors');
@@ -66,21 +68,21 @@ if (live.length) {
         if (epochNumbers) {
             const requestData = async (epoch, limit) => {
                 $.ajax({
-                    url: `${window.location.href}/epoch/${epoch}`,
+                    url:  `${window.location.href.split('?')[0]}/epoch/${epoch}`,
                     type: 'GET',
                     success: (data) => {
                         const serializer = new XMLSerializer();
                         const xmlStr = serializer.serializeToString(data);
                         const generations = $('.generations');
                         generations.append(xmlStr);
-                        addClickExpandListener(generations.children().last()[0]);
+                        addClickExpandListener(generations.children().last().find('.generation__header')[0]);
                     },
                     error: (error) => {
                         manageButtons.removeClass('hidden');
                         loader.addClass('loader--hidden').removeClass('loader');
                     },
                     complete: async () => {
-                        if (epoch + 1 <= limit) {
+                        if (epoch + 1 < limit) {
                             await requestData(epoch+1, limit);
                         }
                     }

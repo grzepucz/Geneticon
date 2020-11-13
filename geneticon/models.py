@@ -82,10 +82,17 @@ class Life(models.Model):
     function = models.ForeignKey(OptimizationMethod, on_delete=models.CASCADE)
 
 
+class Epoch(models.Model):
+    number = models.IntegerField(default=1)
+    life = models.ForeignKey(Life, on_delete=models.CASCADE)
+    generation_time = models.FloatField(default=0)
+    pass
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=30)
     population = models.ForeignKey(Population, on_delete=models.CASCADE)
-    generation = models.IntegerField(default=1)
+    epoch = models.ForeignKey(Epoch, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -101,9 +108,9 @@ class Chromosome(models.Model):
 class Gene(models.Model):
     id = models.AutoField(primary_key=True)
     allel = models.IntegerField(default=1)
-    locus = models.IntegerField(default=0)
+    locus = models.IntegerField(default=1)
     chromosome = models.ForeignKey(Chromosome, on_delete=models.CASCADE)
     pass
 
     def __str__(self):
-        return self.locus
+        return str(self.locus)

@@ -1,11 +1,15 @@
 <html>
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    {% block head %}
-        <title>Genetic Algorithm</title>
-    {% endblock %}
-</head>
-
-{% block body %}
-{% endblock %}
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        {% block head %}
+            <title>Genetic Algorithm</title>
+        {% endblock %}
+    {% load static %}
+    <link href="{% static 'geneticon/css/custom.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <a href="{% url 'home' %}"><div class="logo"></div></a>
+        {% block body %}
+        {% endblock %}
+    </body>
 </html>

@@ -45,13 +45,13 @@
     </div>
     <div class="property property__elite-strategy">
         {% if life.elite_strategy is not null %}
-            <div class="property__label">Percent of subjects save to next generation</div><div class="property__value">{{ life.elite_strategy }}</div>
+            <div class="property__label">Percent of subjects save to next generation</div><div class="property__value">{% widthratio life.elite_strategy 1 100 %}%</div>
         {% endif %}
     </div>
 
     <div class="generations">
     {% if generations is not null %}
-        {% for generation in generations %}
+        {% for generation, epoch in generations %}
             {% include 'epoch/epoch.html' %}
         {% empty %}
             Sorry, generations are not available.

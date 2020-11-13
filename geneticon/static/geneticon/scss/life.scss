@@ -8,17 +8,43 @@
   height: auto;
   position: relative;
 
-  &__title {
-    margin-top: 10px;
-    font-size: 20px;
-    position: relative;
-    text-transform: capitalize;
+  &__header {
+    display: flex;
+    flex-direction: row-reverse;
+
+    &__title {
+      flex: 1;
+      margin: 10px 0;
+      padding: 0 10px;
+      font-size: 25px;
+      position: relative;
+      text-transform: capitalize;
+    }
+
+    &__delete {
+      flex: 2;
+      background-size: contain;
+      background-repeat: no-repeat;
+      max-width: 60px;
+      background-image: url('../images/trash-bin.png');
+      position: relative;
+      justify-content: flex-end;
+      padding: 10px 10px;
+      border-radius: 30%;
+
+      &:hover {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.19);
+        transition: box-shadow 0.2s;
+      }
+    }
   }
 
   &__description {
-    font-size: 15px;
+    font-size: 20px;
     position: relative;
-    margin-bottom: 10px;
+    margin: 10px 0;
+    white-space: pre-line;
+    line-break: loose;
   }
 
   &__properties {
@@ -41,6 +67,7 @@
     &__header {
       display: flex;
       color: grey;
+      width: 100%;
       justify-content: flex-start;
       text-transform: capitalize;
     }
@@ -69,11 +96,29 @@
       flex-direction: row;
       flex: 3;
     }
+
+    &__tool_menu {
+      padding: 10px 10px;
+      display: none;
+      justify-content: center;
+
+      &:hover {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.19);
+        transition: box-shadow 0.2s;
+      }
+    }
   }
+}
+
+.generations {
+    display: flex;
+    flex-direction: column;
 }
 
 .generation {
   &__header {
+    display: flex;
+    flex-direction: row;
     font-size: 20px;
     padding: 10px;
     border-top: azure 2px solid;
@@ -86,9 +131,23 @@
       transition: box-shadow 0.2s;
       cursor: pointer;
     }
+
+    &__label {
+      justify-content: flex-start;
+    }
+
+    &__total_time {
+      right: 15px;
+      position: absolute;
+      color: grey;
+      font-size: 17px;
+      font-style: italic;
+    }
   }
 
   &__population {
+    margin: 10px;
+
     &--hidden {
       transition: display 1s;
       display: none;
@@ -104,62 +163,5 @@
 
   &--loading {
     display: none;
-  }
-}
-
-.button {
-  max-width: 100px;
-  height: 60px;
-  transition-duration: 0.4s;
-  background: none;
-  justify-content: center;
-  margin: 15px;
-  text-transform: uppercase;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:hover {
-    background-color: #4CAF50;
-    color: white;
-  }
-
-  &__next {
-    border-radius: 20px;
-    border: grey 0 none;
-    width: 100px;
-
-    &:hover {
-      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &::before {
-      font-weight: bold;
-      content: "Next";
-    }
-  }
-
-  &__live {
-    border-radius: 20px;
-    border: grey 0 none;
-    width: 100px;
-
-    &:hover {
-      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &::before {
-      font-weight: bold;
-      content: "Live";
-    }
   }
 }

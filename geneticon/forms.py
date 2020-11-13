@@ -21,7 +21,8 @@ class PopulationForm(forms.Form):
         required=True,
         widget=forms.Select,
         choices=Selection.choices)
-    selection_settings = forms.CharField(label='Selection settings in JSON format. Use schema from description')
+    selection_settings = forms.CharField(label='Selection settings in JSON format. Use schema from description',
+                                         initial='{}')
 
     hybridization_type = forms.ChoiceField(
         label='Hybridization type',

@@ -1,33 +1,45 @@
 {% if generation is not null %}
     <div class="generation">
-        <div class="generation__header">Epoch: {{ generation.0.0.generation }}</div>
+        <div class="generation__header">
+            <div class="generation__header__label">Epoch: {{ epoch.number }}</div>
+            {% if epoch is not null %}
+                <div class="generation__header__total_time">{{ epoch.generation_time }}s</div>
+            {% endif %}
+        </div>
         <div class="generation__population--hidden">
-            <div class="property property__header">
-                <div class="property__label">Counter</div>
-                <div class="property__label">Name</div>
-                <div class="property__label">chromosome 1 bin</div>
-                <div class="property__label">chromosome 1 dec</div>
-                <div class="property__label">chromosome 2 bin</div>
-                <div class="property__label">chromosome 2 dec</div>
-                <div class="property__label">Function result</div>
-            </div>
-            {% for subject, chromosomes, function_value in generation %}
-               <div class="property">
-                   <div class="property__index">{{ forloop.counter }}</div>
-                   <div class="property__label">{{ subject }}</div>
-                    {% for chromosome, value in chromosomes %}
-                        <div class="chromosome property__value">
-                            {% for gene in chromosome|dictsort:'locus' %}
-                                {{ gene.allel }}
+            <div class="property__header">
+                    <div class="property__label">Counter</div>
+                    <div class="property__label">Name</div>
+                    <div class="property__label">chromosome 1 bin</div>
+                    <div class="property__label">chromosome 1 dec</div>
+                    <div class="property__label">chromosome 2 bin</div>
+                    <div class="property__label">chromosome 2 dec</div>
+                    <div class="property__label">Function result</div>
+                </div>
+                <div class="property__tool_menu">
+                    <div class="tool__function_value_chart">wykres 1</div>
+                    <div class="tool__mean_function_value_chart">wykres 2</div>
+                    <div class="tool__standard_deviation_chart">wykres 3</div>
+                </div>
+                <div class="property__records">
+                    {% for subject, chromosomes, function_value in generation %}
+                       <div class="property">
+                           <div class="property__index">{{ forloop.counter }}</div>
+                           <div class="property__label">{{ subject }}</div>
+                            {% for chromosome, value in chromosomes %}
+                                <div class="chromosome property__value">
+                                    {% for gene in chromosome|dictsort:'locus' %}
+                                        {{ gene.allel }}
+                                    {% endfor %}
+                                </div>
+                                <div class="chromosome property__value">{{ value }}</div>
                             {% endfor %}
-                        </div>
-                        <div class="chromosome property__value">{{ value }}</div>
+                            <div class="chromosome property__value">{{ function_value }}</div>
+                       </div>
+                    {% empty %}
+                        <div>There is no subjects available.</div>
                     {% endfor %}
-                    <div class="chromosome property__value">{{ function_value }}</div>
-               </div>
-            {% empty %}
-                <div>There is no subjects available.</div>
-            {% endfor %}
+                </div>
         </div>
     </div>
 {% endif %}

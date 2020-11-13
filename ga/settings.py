@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'ga.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'geneticon.sqlite3'),
+        'NAME': str(BASE_DIR / 'ga.sqlite3'),
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',

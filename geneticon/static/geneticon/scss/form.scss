@@ -1,7 +1,6 @@
 .configuration {
     display: flex;
     flex-direction: column;
-    width: 80%;
     margin: 10px 50px;
     height: auto;
 
@@ -16,6 +15,8 @@
 
     &__form {
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        display: flex;
+        flex-direction: column;
 
         label, select {
             margin: 10px 10px 5px;
@@ -33,19 +34,31 @@
     }
 
     &__submit {
-        display: flex;
-        position: relative;
-        font-size: 18px;
-        justify-content: center !important;
-        text-align: center !important;
-        border-radius: 10px;
-        border: 2px solid #4CAF50;
+        height: 60px;
+        transition-duration: 0.4s;
         background: none;
-        margin: 20px 20% !important;
+        justify-content: center;
+        position: relative;
+        margin: 10px 40%;
+        text-transform: uppercase;
+
+        border-radius: 20px;
+        border: grey 0 none;
+        width: 100px;
 
         &:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
             background-color: #4CAF50;
-            transition: background-color .5s;
+            color: white;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        &::before {
+          font-weight: bold;
+          content: "Create";
         }
     }
 }

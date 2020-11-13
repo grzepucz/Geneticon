@@ -19,11 +19,12 @@ from django.urls import path
 from geneticon.services import configuration
 
 urlpatterns = [
+    path('', views.home, name='home'),
     path('admin/', admin.site.urls),
     path('configuration', views.configuration, name='configuration'),
-    path('life/<int:life_id>', views.life),
-    path('life/<int:life_id>/analysis', views.life_analysis, name='lif_analysis'),
+    path('life/<int:life_id>', views.life, name='life'),
     path('life/<int:life_id>/epoch/<int:epoch_number>', views.epoch_analyze, name='epoch_analyze'),
+    path('life/<int:life_id>/epoch/<int:epoch_number>/clean', views.epoch_clean, name='epoch_clean'),
     path('preconfigure', views.preconfigure),
-    path('life/<int:life_id>/clean', views.armageddon)
+    path('life/<int:life_id>/clean', views.armageddon, name='life_clean')
 ]

@@ -1,12 +1,16 @@
 import inspect
 import json
+import time
+
 from django.http import HttpResponse
-from geneticon.models import OptimizationMethod, Population, Selection, Hybridization, Mutation, Inversion, Life
+from geneticon.models import OptimizationMethod, Population, Selection, Hybridization, Mutation, Inversion, Life, Epoch
 from .functions import bohachevsky_formula, booth_formula
 from .generation import create_subjects
 
 
 def save_form_data(form):
+    start_time = time.time()
+
     selection = Selection(
         type=form.data['selection_type'],
         settings=form.data['selection_settings']
@@ -36,7 +40,6 @@ def save_form_data(form):
 
     function = OptimizationMethod.objects.get(id=form.data['optimization_function'])
     precision = form.data['precision']
-    create_subjects(population, function, precision)
 
     life = Life(population=population,
                 epochs=form.data['epochs_number'],
@@ -48,11 +51,17 @@ def save_form_data(form):
                 precision=precision,
                 function=function)
     life.save()
+    epoch = Epoch(life=life, number=1)
+    epoch.save()
+
+    create_subjects(population, function, precision, epoch)
+    epoch.generation_time = time.time() - start_time
+    epoch.save()
 
     return life.id
 
 
-def create_sample_configuration():
+def create_methods():
     bohachevsky = OptimizationMethod(
         id=1,
         domain_minimum=-100,
@@ -71,36 +80,7 @@ def create_sample_configuration():
     booth.formula = inspect.getsource(booth_formula)
     booth.save()
 
-    selection = Selection(id=1, type='TOURNAMENT', settings=json.JSONEncoder().encode({'group_size': 4}))
-    selection.save()
-
-    mutation = Mutation(id=1, type='EDGE', probability=0.1)
-    mutation.save()
-
-    hybridization = Hybridization(id=1, type='SINGLE', probability=0.8)
-    hybridization.save()
-
-    inversion = Inversion(id=1, probability=0.1)
-    inversion.save()
-
-    population = Population(id=1, name='Test', size=12)
-    population.save()
-
-    function = OptimizationMethod.objects.get(id=1)
-    precision = 4
-    create_subjects(population, function, precision)
-
-    life = Life(population=population,
-                epochs=20,
-                selection=selection,
-                hybridization=hybridization,
-                mutation=mutation,
-                inversion=inversion,
-                elite_strategy=0.3,
-                function=booth)
-    life.save()
-
 
 def sample_configuration(request):
-    create_sample_configuration()
+    create_methods()
     return HttpResponse(200)
