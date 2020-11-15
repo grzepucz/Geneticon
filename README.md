@@ -1,4 +1,4 @@
-![Geneticon](geneticon.png?raw=true "Geneticon")
+![Geneticon](geneticon/static/geneticon/images/geneticon.png?raw=true "Geneticon")
 
 # Genetic algorithms implementation
 Implementation of genetic algorithms in python3 by finding minimal values of chosen multivariable functions. You can configure selection method, crossover type and probability, mutation type and probability, inversion probability and elite strategy percentage. Also You can and should set epoch numbers, precision of numbers after comma and group_size, different for selected selection method.
