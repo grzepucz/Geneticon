@@ -29,18 +29,18 @@
     <div class="property property__hybridization">
         {% if life.hybridization is not null %}
             <div class="property__label">Hybridization type:</div><div class="property__value">{{ life.hybridization.type }}</div>
-            <div class="property__label">Hybridization probability:</div><div class="property__value">{{ life.hybridization.probability }}</div>
+            <div class="property__label">Hybridization probability:</div><div class="property__value">{% widthratio life.hybridization.probability 1 100 %}%</div>
         {% endif %}
     </div>
     <div class="property property__mutation">
         {% if life.mutation is not null %}
             <div class="property__label">Mutation type:</div><div class="property__value">{{ life.mutation.type }}</div>
-            <div class="property__label">Mutation probability:</div><div class="property__value">{{ life.mutation.probability }}</div>
+            <div class="property__label">Mutation probability:</div><div class="property__value">{% widthratio life.mutation.probability 1 100 %}%</div>
         {% endif %}
     </div>
     <div class="property property__inversion">
         {% if life.inversion is not null %}
-            <div class="property__label">Inversion probability</div><div class="property__value">{{ life.inversion.probability }}</div>
+            <div class="property__label">Inversion probability</div><div class="property__value">{% widthratio life.inversion.probability 1 100 %}%</div>
         {% endif %}
     </div>
     <div class="property property__elite-strategy">

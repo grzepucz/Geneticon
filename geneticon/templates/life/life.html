@@ -8,14 +8,32 @@
 {% block body %}
 <div class="life-configuration">
     <div class="life-configuration__header">
-        <div class="life-configuration__header__title">Your configuration</div>
-        <a href="{% url 'life_clean' life.id %}"><div class="life-configuration__header__delete"></div></a>
+        <div class="life-configuration__header__title">{{ life.population.name }}: configuration</div>
+        <a class="life-configuration__header__delete" href="{% url 'life_clean' life.id %}"></a>
     </div>
     <div class="life-configuration__description">
         Here are values You set in previous form. If You want to run 'the Life' click 'Live' button or just iterate through next generations by clicking in next button.
-        Once You create generation it cannot be recreated.
     </div>
     {% if generation_time %}<div class="life-configuration__total_title">Creation of this init population took {{ generation_time }}</div>{% endif %}
+
+    <div class="life-configuration__result">
+        <div class="life-configuration__result__label">Current result</div>
+        <div class="life-configuration__result__value hidden">
+            {% if result is not null %}
+               <div class="result__name">{{ result.0 }}</div>
+                {% for chromosome, value in result.1 %}
+                    <div class="result__genes">
+                        {% for gene in chromosome|dictsort:'locus' %}
+                            {{ gene.allel }}
+                        {% endfor %}
+                    </div>
+                    <div class="result__chromosome">{{ value }}</div>
+                {% endfor %}
+                <div class="result__value">{{ result.2 }}</div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="life-configuration__properties">
         {% include 'life/configuration_extended.html' %}
     </div>

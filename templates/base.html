@@ -1,6 +1,5 @@
 <html>
     <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         {% block head %}
             <title>Genetic Algorithm</title>
         {% endblock %}
@@ -8,8 +7,16 @@
     <link href="{% static 'geneticon/css/custom.css' %}" rel="stylesheet">
     </head>
     <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <div class="info-layer hidden">
+            <div class="info-layer__message"></div>
+        </div>
+        <div class="loading-layer hidden"><div class="loader"></div></div>
         <a href="{% url 'home' %}"><div class="logo"></div></a>
+
         {% block body %}
         {% endblock %}
+
+        <script src="{% static 'geneticon/js/custom.js' %}"></script>
     </body>
 </html>

@@ -1,4 +1,3 @@
-import json
 import math
 import random
 import string
@@ -13,26 +12,20 @@ def create_subjects(reflect_offspring, epoch):
     for parent in reflect_offspring:
         clone = Subject(name=parent.name, population=parent.population, epoch=epoch)
         clone.save()
-        i = 0
         for parent_chromosome in Chromosome.objects.filter(subject=parent):
             chromosome = Chromosome(size=parent_chromosome.size, subject=clone)
             chromosome.save()
             for parent_gene in Gene.objects.filter(chromosome=parent_chromosome):
                 gene = Gene(allel=parent_gene.allel, locus=parent_gene.locus, chromosome=chromosome)
                 gene.save()
-            i += 1
-            print('Stworzylem chromosom w elitarnej: %s', str(i))
         offspring.append(clone)
     return offspring
 
 
 def create_offspring(life_model, parents, epoch, previous_population_length):
     offspring = []
-    settings = json.loads(life_model.selection.settings)
-    if 0 < len(parents) < int(settings['group_size']):
-        parents[0].id = None
-        parents[0].save()
-        return parents[0]
+    if len(parents) == 1:
+        return create_subjects(parents[0:1], epoch)
 
     if 0 < life_model.elite_strategy * previous_population_length <= len(parents):
         offspring = create_subjects(parents[:math.ceil(life_model.elite_strategy * previous_population_length)], epoch)
@@ -117,7 +110,6 @@ def double_crossover(chromosomes, partner_chromosomes, children):
         genes_y = Gene.objects.filter(
             chromosome=partner_chromosomes[chromosome_index]).order_by('locus')
         pivot = sorted(random.sample(range(1, chromosomes[chromosome_index].size), 2), key=lambda x: x)
-        print('pivot ', pivot)
         for gene_index in range(len(genes_x)):
             genes = [Gene() for chromosome in children_chromosomes]
             for index in range(len(genes)):
@@ -139,7 +131,6 @@ def triple_crossover(chromosomes, partner_chromosomes, children):
         genes_y = Gene.objects.filter(
             chromosome=partner_chromosomes[chromosome_index]).order_by('locus')
         pivot = sorted(random.sample(range(1, chromosomes[chromosome_index].size), 3), key=lambda x: x)
-        print('pivot ', pivot)
         for gene_index in range(len(genes_x)):
             genes = [Gene() for chromosome in children_chromosomes]
             for index in range(len(genes)):
@@ -188,7 +179,7 @@ def crossover(parents, index, life_model, epoch):
         return double_crossover(chromosomes, partner_chromosomes, children)
     if life_model.hybridization.type == 'TRIPLE':
         return triple_crossover(chromosomes, partner_chromosomes, children)
-    # if life_model.hybridization.type == 'HOMO':
-    #     return homogeneous_crossover(chromosomes, partner_chromosomes, children)
+    if life_model.hybridization.type == 'HOMO':
+        return homogeneous_crossover(chromosomes, partner_chromosomes, children)
 
     return False

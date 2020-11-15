@@ -24,6 +24,7 @@ urlpatterns = [
     path('configuration', views.configuration, name='configuration'),
     path('life/<int:life_id>', views.life, name='life'),
     path('life/<int:life_id>/epoch/<int:epoch_number>', views.epoch_analyze, name='epoch_analyze'),
+    path('life/<int:life_id>/epoch/<int:epoch_number>/metrics', views.epoch_metrics, name='epoch_metrics'),
     path('life/<int:life_id>/epoch/<int:epoch_number>/clean', views.epoch_clean, name='epoch_clean'),
     path('preconfigure', views.preconfigure),
     path('life/<int:life_id>/clean', views.armageddon, name='life_clean')

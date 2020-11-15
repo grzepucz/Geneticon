@@ -8,6 +8,43 @@
   height: auto;
   position: relative;
 
+  &__result {
+    margin: 10px 0;
+    display: flex;
+    padding: 15px 15px;
+    flex-direction: column;
+    font-weight: bold;
+    text-transform: capitalize;
+    background-color: #e4ffc0;
+
+    &:hover {
+      box-shadow: 0 4px 8px 0 #c1ff74, 0 2px 10px 0 #8cff6d;
+      transition: box-shadow 0.3s;
+    }
+
+    &__label {
+      display: flex;
+    }
+
+    &__genes {
+      display: flex;
+      white-space: nowrap;
+      line-break: loose;
+      margin-left: 5px;
+      margin-right: 10px;
+      flex-direction: row;
+    }
+
+    &__value {
+      display: flex;
+      white-space: nowrap;
+      line-break: loose;
+      margin-left: 5px;
+      margin-right: 10px;
+      flex-direction: row;
+    }
+  }
+
   &__header {
     display: flex;
     flex-direction: row-reverse;
@@ -16,7 +53,7 @@
       flex: 1;
       margin: 10px 0;
       padding: 0 10px;
-      font-size: 25px;
+      font-size: 40px;
       position: relative;
       text-transform: capitalize;
     }
@@ -25,7 +62,8 @@
       flex: 2;
       background-size: contain;
       background-repeat: no-repeat;
-      max-width: 60px;
+      max-width: 40px;
+      height: 50px;
       background-image: url('../images/trash-bin.png');
       position: relative;
       justify-content: flex-end;
@@ -33,7 +71,7 @@
       border-radius: 30%;
 
       &:hover {
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.19);
+        box-shadow: 0 4px 8px 0 #FF6B6B, 0 2px 10px 0 #ff1717;
         transition: box-shadow 0.2s;
       }
     }
@@ -97,9 +135,10 @@
       flex: 3;
     }
 
-    &__tool_menu {
+    &__metrics {
       padding: 10px 10px;
-      display: none;
+      display: flex;
+      margin: 10px;
       justify-content: center;
 
       &:hover {
@@ -107,6 +146,24 @@
         transition: box-shadow 0.2s;
       }
     }
+  }
+}
+
+.result {
+  &__genes {
+    padding: 10px 10px;
+  }
+
+  &__name {
+    padding: 10px 10px;
+  }
+
+  &__chromosome {
+    padding: 10px 10px;
+  }
+
+  &__value {
+    padding: 10px 10px;
   }
 }
 

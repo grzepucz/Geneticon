@@ -1,19 +1,18 @@
-import datetime
 import time
-
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
 from .forms import PopulationForm
 from .services.configuration import save_form_data, sample_configuration
 from .services.generation import get_generation, create_generation
-from .models import Population, Life, Subject, Chromosome, Gene, Epoch
+from .services.metrics import create_data_plot_attributes, get_statistics
+from .models import Population, Life, Epoch
 
 
 def home(request):
     lives = []
     for record in Life.objects.all():
         population = Population.objects.get(life=record)
-        lives.append((record.id, population.name, record.function.name, population.create_date.isoformat()))
+        lives.append((record.id, population.name, record.selection.type, record.function.name, population.create_date))
     return render(request, 'home.html', {
         'lives': lives
     }, content_type='text/html')
@@ -45,6 +44,7 @@ def life(request, life_id):
     return render(request, 'life/life.html', {
         'life': life_model,
         'generations': generations,
+        'result': generations[-1][0][0],
         'generation_time': request.GET.get('generation_time', '')
     }, content_type='text/html')
 
@@ -64,10 +64,10 @@ def epoch_analyze(request, life_id, epoch_number):
     else:
         epoch = Epoch.objects.get(life=life_model, number=epoch_number)
     generation = get_generation(life_model, epoch)
-    print(generation)
     return render(request, 'epoch/epoch.html', {
         'generation': generation,
-        'epoch': epoch
+        'epoch': epoch,
+        'life': life_model
     }, content_type='text/xml')
 
 
@@ -84,3 +84,22 @@ def armageddon(request, life_id):
 def epoch_clean(request, life_id, epoch_number):
     Epoch.objects.filter(life=Life.objects.get(id=life_id), number=epoch_number).delete()
     return redirect('life', life_id=life_id)
+
+
+def epoch_metrics(request, life_id, epoch_number):
+    life_model = get_object_or_404(Life, id=life_id)
+    epoch = Epoch.objects.get(life=life_model, number=epoch_number)
+    generation = get_generation(life_model, epoch)
+
+    mean, deviation = get_statistics(generation)
+    data_x, data_y, data_z = create_data_plot_attributes(generation)
+
+    return render(request, 'metrics/metrics.html', {
+        'life_id': life_id,
+        'epoch_number': epoch_number,
+        'mean': mean,
+        'deviation': deviation,
+        'data_x': data_x,
+        'data_y': data_y,
+        'data_z': data_z
+    }, content_type='text/html')

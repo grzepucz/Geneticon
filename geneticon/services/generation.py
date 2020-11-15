@@ -12,11 +12,7 @@ from geneticon.services.functions import get_formula_by_name
 def create_generation(life_model, epoch):
     previous_generation = Epoch.objects.get(life=life_model, number=epoch.number-1)
     ancestors = Subject.objects.filter(population=life_model.population, epoch=previous_generation)
-    print('ancestors length')
-    print(len(ancestors))
     parents = select_from_population(life_model, ancestors)
-    print('parents length:')
-    print(len(parents))
     return create_offspring(life_model, parents, epoch, len(ancestors))
 
 
@@ -39,7 +35,7 @@ def get_generation(life_model, epoch):
             formula = get_formula_by_name(life_model.function.name)
             function_value = formula(subject_genes[0][1], subject_genes[1][1]) if len(subject_genes) else 'NaN'
             generation.append((subject, subject_genes, function_value))
-    return sorted(generation, key=lambda x: x[2])
+    return sorted(generation, key=lambda x: abs(x[2]))
 
 
 def calculate_chromosome_size(function, precision):
