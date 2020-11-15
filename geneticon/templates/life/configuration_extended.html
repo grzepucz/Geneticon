@@ -1,8 +1,9 @@
 {% if life is not null %}
     <div class="property property__epoch">
-        {% if life.epochs is not null %}
-            <div class="property__label">Epoch number:</div><div class="property__value">{{ life.epochs }}</div>
-        {% endif %}
+        <div class="property__label">Epoch number:</div><div class="property__value">{{ life.epochs }}</div>
+    </div>
+    <div class="property property__problem">
+        <div class="property__label">Problem:</div><div class="property__value">{{ life.problem }}</div>
     </div>
     <div class="property property__method">
         {% if life.function is not null %}

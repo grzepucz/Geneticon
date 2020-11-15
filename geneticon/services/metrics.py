@@ -22,3 +22,7 @@ def get_statistics(generation):
     mean = statistics.mean(function_values)
     deviation = statistics.stdev(function_values)
     return [mean, deviation]
+
+
+def get_epoch_numbers(life_id, epoch_number):
+    return True

@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .forms import PopulationForm
 from .services.configuration import save_form_data, sample_configuration
 from .services.generation import get_generation, create_generation
-from .services.metrics import create_data_plot_attributes, get_statistics
+from .services.metrics import create_data_plot_attributes, get_statistics, get_epoch_numbers
 from .models import Population, Life, Epoch
 
 
@@ -87,6 +87,10 @@ def epoch_clean(request, life_id, epoch_number):
 
 
 def epoch_metrics(request, life_id, epoch_number):
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     kwargs['epoch_number'] = get_epoch_numbers(life_id, epoch_number)
+    #     return kwargs
     life_model = get_object_or_404(Life, id=life_id)
     epoch = Epoch.objects.get(life=life_model, number=epoch_number)
     generation = get_generation(life_model, epoch)

@@ -1,8 +1,17 @@
 from django import forms
 from django.forms import NumberInput
 
-from .models import OptimizationMethod, Selection, Hybridization, Mutation, Inversion, Population
+from .models import OptimizationMethod, Selection, Hybridization, Mutation, Life
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+
+class EpochForm(forms.Form):
+    epoch_number = forms.ChoiceField(label='Epoch number', choices=[], widget=forms.Select, required=True)
+
+    def __init__(self, *args, **kwargs):
+        epoch_number = kwargs.pop('epoch_number')
+        super().__init__(*args, **kwargs)
+        self.fields['epoch_number'].choices = epoch_number
 
 
 class PopulationForm(forms.Form):
@@ -10,6 +19,8 @@ class PopulationForm(forms.Form):
                                          widget=NumberInput(attrs={'step': "1"}))
     population_name = forms.CharField(label='Population name', required=True)
 
+    problem = forms.ChoiceField(label='Optimization problem', required=True, widget=forms.Select,
+                                choices=Life.choices)
     methods = [[model.id, model.name] for model in OptimizationMethod.objects.all()]
     optimization_function = forms.ChoiceField(
         label='Optimize function',

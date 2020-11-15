@@ -70,6 +70,10 @@ class Inversion(models.Model):
 
 
 class Life(models.Model):
+    choices = [
+        ('MAX', 'Maximum'),
+        ('MIN', 'Minimum')
+    ]
     id = models.AutoField(primary_key=True)
     population = models.OneToOneField(Population, on_delete=models.CASCADE)
     epochs = models.IntegerField(default=10)
@@ -80,6 +84,7 @@ class Life(models.Model):
     elite_strategy = models.FloatField(default=0)
     precision = models.IntegerField(default=0)
     function = models.ForeignKey(OptimizationMethod, on_delete=models.CASCADE)
+    problem = models.CharField(max_length=3, default='MIN')
 
 
 class Epoch(models.Model):

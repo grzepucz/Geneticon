@@ -40,6 +40,7 @@ def save_form_data(form):
 
     function = OptimizationMethod.objects.get(id=form.data['optimization_function'])
     precision = form.data['precision']
+    problem = form.data['problem']
 
     life = Life(population=population,
                 epochs=form.data['epochs_number'],
@@ -49,7 +50,8 @@ def save_form_data(form):
                 inversion=inversion,
                 elite_strategy=form.data['elite_strategy'],
                 precision=precision,
-                function=function)
+                function=function,
+                problem=problem)
     life.save()
     epoch = Epoch(life=life, number=1)
     epoch.save()

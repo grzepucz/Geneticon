@@ -21,7 +21,7 @@ def get_sorted_values(life_model, ancestors):
                 subject_genes.append(subject_genes_value)
             function_value = get_formula_by_name(life_model.function.name)(subject_genes[0], subject_genes[1])
             calculated.append((function_value, subject))
-    return sorted(calculated, key=lambda x: x[0])
+    return sorted(calculated, key=lambda x: x[0], reverse=True if life_model.problem == 'MAX' else False)
 
 
 def best_of_selection(life_model, ancestors, settings):
@@ -45,7 +45,7 @@ def tournament_selection(life_model, ancestors, settings):
         group_size = int(settings['group_size']) if len(calculated) >= int(settings['group_size']) else len(calculated)
         group = random.sample(calculated, group_size)
         calculated = [item for item in calculated if item not in group]
-        tournament.append(sorted(group, key=lambda x: x[0]))
+        tournament.append(sorted(group, key=lambda x: x[0], reverse=True if life_model.problem == 'MAX' else False))
     return [winner[0][1] for winner in tournament]
 
 
@@ -54,7 +54,7 @@ def roulette_selection(life_model, ancestors, settings):
         return False
 
     subjects = get_sorted_values(life_model, ancestors)
-    calculated = [(1/item[0], item[1]) for item in subjects]
+    calculated = [(1/item[0] if life_model.problem == 'MIN' else item[0], item[1]) for item in subjects]
     group_size = settings['group_size'] if len(calculated) > settings['group_size'] else len(calculated)
     roulette = []
 

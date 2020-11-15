@@ -35,7 +35,7 @@ def get_generation(life_model, epoch):
             formula = get_formula_by_name(life_model.function.name)
             function_value = formula(subject_genes[0][1], subject_genes[1][1]) if len(subject_genes) else 'NaN'
             generation.append((subject, subject_genes, function_value))
-    return sorted(generation, key=lambda x: abs(x[2]))
+    return sorted(generation, key=lambda x: abs(x[2]), reverse=True if life_model.problem == 'MAX' else False)
 
 
 def calculate_chromosome_size(function, precision):
