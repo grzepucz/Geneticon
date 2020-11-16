@@ -1,5 +1,7 @@
 import statistics
 
+from geneticon.models import Epoch
+
 
 def create_data_plot_attributes(generation):
     data_x = []
@@ -25,4 +27,4 @@ def get_statistics(generation):
 
 
 def get_epoch_numbers(life_id, epoch_number):
-    return True
+    return [(epoch.number, epoch.number) for epoch in Epoch.objects.filter(life_id=life_id)]

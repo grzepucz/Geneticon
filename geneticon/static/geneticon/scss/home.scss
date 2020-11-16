@@ -64,17 +64,24 @@
     flex: 1;
   }
 
-  &__selection {
+  &__problem {
     text-transform: capitalize;
     flex: 2;
   }
 
-  &__formula {
+  &__selection {
+    text-transform: capitalize;
+    max-width: 150px;
     flex: 3;
   }
 
-  &__date {
+  &__formula {
     flex: 4;
+    max-width: 150px;
+  }
+
+  &__date {
+    flex: 5;
     color: grey;
     font-size: 17px;
     font-style: italic;

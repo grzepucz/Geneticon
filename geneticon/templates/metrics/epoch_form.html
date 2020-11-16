@@ -1,0 +1,5 @@
+<form action="{% url 'epoch_metrics' life_id epoch_number %}" method="post" class="epoch_form">
+    {% csrf_token %}
+    <div class="form">{{ epoch_form }}</div>
+    <input type="submit" class="epoch__submit">
+</form>

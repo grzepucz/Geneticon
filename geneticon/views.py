@@ -1,7 +1,7 @@
 import time
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import PopulationForm
+from .forms import PopulationForm, EpochForm
 from .services.configuration import save_form_data, sample_configuration
 from .services.generation import get_generation, create_generation
 from .services.metrics import create_data_plot_attributes, get_statistics, get_epoch_numbers
@@ -12,7 +12,14 @@ def home(request):
     lives = []
     for record in Life.objects.all():
         population = Population.objects.get(life=record)
-        lives.append((record.id, population.name, record.selection.type, record.function.name, population.create_date))
+        lives.append(
+            (record.id,
+             population.name,
+             record.problem,
+             record.selection.type,
+             record.function.name,
+             population.create_date)
+        )
     return render(request, 'home.html', {
         'lives': lives
     }, content_type='text/html')
@@ -87,10 +94,17 @@ def epoch_clean(request, life_id, epoch_number):
 
 
 def epoch_metrics(request, life_id, epoch_number):
-    # def get_form_kwargs(self):
-    #     kwargs = super().get_form_kwargs()
-    #     kwargs['epoch_number'] = get_epoch_numbers(life_id, epoch_number)
-    #     return kwargs
+    epoch_numbers_ = get_epoch_numbers(life_id, epoch_number)
+    if request.method == 'POST':
+        form = EpochForm(epoch_numbers_, request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/life/'
+                                        + str(life_id)
+                                        + '/epoch/'
+                                        + str(form.data['epoch_number'])
+                                        + '/metrics')
+    else:
+        form = EpochForm(epoch_numbers_, initial={'epoch_number': epoch_number})
     life_model = get_object_or_404(Life, id=life_id)
     epoch = Epoch.objects.get(life=life_model, number=epoch_number)
     generation = get_generation(life_model, epoch)
@@ -99,8 +113,9 @@ def epoch_metrics(request, life_id, epoch_number):
     data_x, data_y, data_z = create_data_plot_attributes(generation)
 
     return render(request, 'metrics/metrics.html', {
+        'epoch_form': form,
         'life_id': life_id,
-        'epoch_number': epoch_number,
+        'epoch': epoch,
         'mean': mean,
         'deviation': deviation,
         'data_x': data_x,

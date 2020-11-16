@@ -6,12 +6,11 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class EpochForm(forms.Form):
-    epoch_number = forms.ChoiceField(label='Epoch number', choices=[], widget=forms.Select, required=True)
+    epoch_number = forms.ChoiceField(choices=[], widget=forms.Select, required=True)
 
-    def __init__(self, *args, **kwargs):
-        epoch_number = kwargs.pop('epoch_number')
-        super().__init__(*args, **kwargs)
-        self.fields['epoch_number'].choices = epoch_number
+    def __init__(self, epoch_numbers_, *args, **kwargs):
+        super(EpochForm, self).__init__(*args, **kwargs)
+        self.fields['epoch_number'].choices = epoch_numbers_
 
 
 class PopulationForm(forms.Form):

@@ -9,7 +9,9 @@
 {% block body %}
     <div class="menu_navigate">
         <a class="back_button" href="{% url 'life' life_id %}" alt="Back to life analyse"></a>
-        <div class="epoch_number">Epoch: {{ epoch_number }}</div>
+        <div class="epoch_number">Epoch: </div>
+        {% include 'metrics/epoch_form.html' %}
+        <div class="epoch_time">{{ epoch.generation_time }}</div>
     </div>
     <div class="content">
         <div class="mean">
