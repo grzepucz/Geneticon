@@ -6,21 +6,37 @@ from geneticon.models import Selection, Chromosome, Gene
 from geneticon.services.functions import get_formula_by_name
 
 
+def sort_selected(result, problem):
+    print(result)
+    return result
+    # return sorted(result, key=lambda x: x[0], reverse=True if problem == 'MAX' else False)
+
+
 def get_sorted_values(life_model, ancestors):
     calculated = []
+    formula = get_formula_by_name(life_model.function.name)
+
     for subject in ancestors:
         subject_chromosomes = Chromosome.objects.filter(subject=subject)
         subject_genes = []
+
         if subject_chromosomes.exists():
-            for chromosome in subject_chromosomes:
-                subject_genes_value = decode_chromosome_value(
-                    Gene.objects.filter(chromosome=chromosome),
-                    life_model.function,
-                    life_model.precision,
-                    chromosome.size)
-                subject_genes.append(subject_genes_value)
-            function_value = get_formula_by_name(life_model.function.name)(subject_genes[0], subject_genes[1])
+            function_value = False
+
+            if life_model.representation == 'BINARY':
+                for chromosome in subject_chromosomes:
+                    subject_genes_value = decode_chromosome_value(
+                        Gene.objects.filter(chromosome=chromosome),
+                        life_model.function,
+                        life_model.precision,
+                        chromosome.size)
+                    subject_genes.append(subject_genes_value)
+                function_value = formula(subject_genes[0], subject_genes[1])
+            if life_model.representation == 'REAL':
+                function_value = formula(subject_chromosomes[0].real_value, subject_chromosomes[1].real_value)
+
             calculated.append((function_value, subject))
+
     return sorted(calculated, key=lambda x: x[0], reverse=True if life_model.problem == 'MAX' else False)
 
 
@@ -75,13 +91,15 @@ def roulette_selection(life_model, ancestors, settings):
 
 def select_from_population(life_model, ancestors):
     settings = json.loads(life_model.selection.settings)
+    result = []
     if life_model.selection.type == 'BEST':
-        return best_of_selection(life_model, ancestors, settings)
+        result = best_of_selection(life_model, ancestors, settings)
     elif life_model.selection.type == 'TOURNAMENT':
-        return tournament_selection(life_model, ancestors, settings)
+        result = tournament_selection(life_model, ancestors, settings)
     elif life_model.selection.type == 'ROULETTE':
-        return roulette_selection(life_model, ancestors, settings)
-    return []
+        result = roulette_selection(life_model, ancestors, settings)
+
+    return sort_selected(result, life_model.problem)
 
 
 def chromosome_binary_to_number(genes):

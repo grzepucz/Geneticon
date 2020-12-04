@@ -20,7 +20,6 @@ from geneticon.services import configuration
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('admin/', admin.site.urls),
     path('configuration', views.configuration, name='configuration'),
     path('life/<int:life_id>', views.life, name='life'),
     path('life/<int:life_id>/epoch/<int:epoch_number>', views.epoch_analyze, name='epoch_analyze'),

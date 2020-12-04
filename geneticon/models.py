@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from django.db import models
 
 
@@ -19,7 +19,7 @@ class Population(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
     size = models.BigIntegerField(default=0)
-    create_date = models.DateField(default=datetime.now())
+    create_date = models.DateField(default=datetime.datetime.now())
     pass
 
     def __str__(self):
@@ -44,7 +44,9 @@ class Hybridization(models.Model):
         ('SINGLE', 'Single point'),
         ('DOUBLE', 'Double point'),
         ('TRIPLE', 'Triple point'),
-        ('HOMO', 'Homogeneous')
+        ('HOMO', 'Homogeneous'),
+        ('ARITHMETIC', 'Arithmetic'),
+        ('HEURISTIC', 'Heuristic'),
     ]
     id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=30, choices=choices)
@@ -56,7 +58,9 @@ class Mutation(models.Model):
     choices = [
         ('EDGE', 'Edge'),
         ('SINGLE', 'Single point'),
-        ('DOUBLE', 'Double point')
+        ('DOUBLE', 'Double point'),
+        ('EVEN', 'Even'),
+        ('INDEX', 'Index change')
     ]
     id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=30, choices=choices)
@@ -70,9 +74,13 @@ class Inversion(models.Model):
 
 
 class Life(models.Model):
-    choices = [
+    problem_choices = [
         ('MAX', 'Maximum'),
         ('MIN', 'Minimum')
+    ]
+    representation_choices = [
+        ('REAL', 'Real'),
+        ('BINARY', 'Binary')
     ]
     id = models.AutoField(primary_key=True)
     population = models.OneToOneField(Population, on_delete=models.CASCADE)
@@ -85,6 +93,7 @@ class Life(models.Model):
     precision = models.IntegerField(default=0)
     function = models.ForeignKey(OptimizationMethod, on_delete=models.CASCADE)
     problem = models.CharField(max_length=3, default='MIN')
+    representation = models.CharField(max_length=3, default='BINARY')
 
 
 class Epoch(models.Model):
@@ -107,6 +116,7 @@ class Chromosome(models.Model):
     id = models.AutoField(primary_key=True)
     size = models.BigIntegerField(default=0)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    real_value = models.FloatField(default=100)
     pass
 
 

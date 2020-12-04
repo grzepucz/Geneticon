@@ -30,13 +30,36 @@ def multiple_mutation(chromosomes, points, mutation_probability):
                 gene.save()
 
 
-def mutate(subject, mutation_type, mutation_probability):
+def even_mutation(chromosomes, mutation_probability, life_function):
+    for chromosome in chromosomes:
+        if random.random() <= mutation_probability:
+            chromosome.real_value = random.uniform(life_function.domain_minimum, life_function.domain_maximum)
+            chromosome.save()
+
+
+def index_mutation(chromosomes, mutation_probability):
+    if random.random() <= mutation_probability and len(chromosomes) == 2:
+        tmp = chromosomes[0].real_value
+
+        chromosomes[0].real_value = chromosomes[1].real_value
+        chromosomes[1].real_value = tmp
+
+        chromosomes[0].save()
+        chromosomes[1].save()
+
+
+def mutate(subject, mutation_type, mutation_probability, life_function):
     chromosomes = Chromosome.objects.filter(subject=subject)
+
     if mutation_type == 'EDGE':
         edge_mutation(chromosomes, mutation_probability)
     if mutation_type == 'SINGLE':
         single_mutation(chromosomes, mutation_probability)
     if mutation_type == 'DOUBLE':
         multiple_mutation(chromosomes, 2, mutation_probability)
+    if mutation_type == 'EVEN':
+        even_mutation(chromosomes, mutation_probability, life_function)
+    if mutation_type == 'INDEX':
+        index_mutation(chromosomes, mutation_probability)
 
     return subject

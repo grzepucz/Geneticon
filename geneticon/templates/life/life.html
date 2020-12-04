@@ -25,11 +25,12 @@
                     <div class="result__genes">
                         {% for gene in chromosome|dictsort:'locus' %}
                             {{ gene.allel }}
+                        {% empty %}
                         {% endfor %}
                     </div>
-                    <div class="result__chromosome">{{ value }}</div>
+                    <div class="result__chromosome">x{{ forloop.counter }}: {{ value }}</div>
                 {% endfor %}
-                <div class="result__value">{{ result.2 }}</div>
+                <div class="result__value">value: {{ result.2 }}</div>
             {% endif %}
         </div>
     </div>

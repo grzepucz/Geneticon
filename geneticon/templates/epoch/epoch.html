@@ -11,9 +11,9 @@
             <div class="property__header">
                     <div class="property__label">Counter</div>
                     <div class="property__label">Name</div>
-                    <div class="property__label">chromosome 1 bin</div>
+                    {% if life.representation == 'BINARY' %}<div class="property__label">chromosome 1 bin</div>{% endif %}
                     <div class="property__label">chromosome 1 dec</div>
-                    <div class="property__label">chromosome 2 bin</div>
+                    {% if life.representation == 'BINARY' %}<div class="property__label">chromosome 2 bin</div>{% endif %}
                     <div class="property__label">chromosome 2 dec</div>
                     <div class="property__label">Function result</div>
                 </div>
@@ -26,9 +26,12 @@
                                 <div class="chromosome__gene property__value">
                                     {% for gene in chromosome|dictsort:'locus' %}
                                         {{ gene.allel }}
+                                    {% empty %}
                                     {% endfor %}
                                 </div>
                                 <div class="chromosome__gene_value property__value">{{ value }}</div>
+                            {% empty %}
+                                <div class="chromosome__gene_value property__value">-</div>
                             {% endfor %}
                             <div class="function__value property__value">{{ function_value }}</div>
                        </div>
