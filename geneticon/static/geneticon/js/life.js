@@ -104,6 +104,8 @@ const addManageButtonsListeners = () => {
                                 requestData(epoch+1, limit);
                             }
                             if (!checkEpochLimit()) {
+                                manageButtons.removeClass('hidden');
+                                loader.addClass('loader--hidden').removeClass('loader');
                                 disableButtons();
                             }
                         }
