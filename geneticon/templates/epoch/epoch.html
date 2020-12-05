@@ -3,6 +3,7 @@
         <div class="generation__header">
             {% if epoch is not null %}
                 <div class="generation__header__label">Epoch: {{ epoch.number }}</div>
+                <div class="generation__header__population">Population size: {{ generation|length }}</div>
                 <div class="generation__header__total_time">{{ epoch.generation_time }}s</div>
             {% endif %}
         </div>

@@ -89,7 +89,6 @@ def create_chromosome(subject, function, precision, representation, size=2):
     if representation == 'REAL':
         for i in range(size):
             value = random.uniform(function.domain_minimum, function.domain_maximum)
-            print('value: ', value)
             chromosome = Chromosome(
                 size=0,
                 real_value=value,
