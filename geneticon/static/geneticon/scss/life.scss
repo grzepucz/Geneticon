@@ -190,15 +190,24 @@
     }
 
     &__label {
+      display: flex;
       justify-content: flex-start;
     }
 
+    &__population {
+      display: flex;
+      justify-content: center;
+      margin: 0 20px;
+    }
+
     &__total_time {
+      display: flex;
       right: 15px;
       position: absolute;
       color: grey;
       font-size: 17px;
       font-style: italic;
+      justify-content: flex-end;
     }
   }
 

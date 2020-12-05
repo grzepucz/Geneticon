@@ -18,8 +18,11 @@ class PopulationForm(forms.Form):
                                          widget=NumberInput(attrs={'step': "1"}))
     population_name = forms.CharField(label='Population name', required=True)
 
+    representation = forms.ChoiceField(label='Chromosome representation', required=True, widget=forms.Select,
+                                       choices=Life.representation_choices)
+
     problem = forms.ChoiceField(label='Optimization problem', required=True, widget=forms.Select,
-                                choices=Life.choices)
+                                choices=Life.problem_choices)
     methods = [[model.id, model.name] for model in OptimizationMethod.objects.all()]
     optimization_function = forms.ChoiceField(
         label='Optimize function',

@@ -7,7 +7,14 @@ from .mutation import mutate
 from .inversion import inverse
 
 
-def create_subjects(reflect_offspring, epoch):
+def create_subjects(representation):
+    if representation == 'BINARY':
+        return create_subjects_binary
+    if representation == 'REAL':
+        return create_subjects_real
+
+
+def create_subjects_binary(reflect_offspring, epoch):
     offspring = []
     for parent in reflect_offspring:
         clone = Subject(name=parent.name, population=parent.population, epoch=epoch)
@@ -22,25 +29,43 @@ def create_subjects(reflect_offspring, epoch):
     return offspring
 
 
+def create_subjects_real(reflect_offspring, epoch):
+    offspring = []
+    for parent in reflect_offspring:
+        clone = Subject(name=parent.name, population=parent.population, epoch=epoch)
+        clone.save()
+        for parent_chromosome in Chromosome.objects.filter(subject=parent):
+            chromosome = Chromosome(size=parent_chromosome.size, subject=clone, real_value=parent_chromosome.real_value)
+            chromosome.save()
+        offspring.append(clone)
+    return offspring
+
+
 def create_offspring(life_model, parents, epoch, previous_population_length):
     offspring = []
+    create_subjects_method = create_subjects(life_model.representation)
+
     if len(parents) == 1:
-        return create_subjects(parents[0:1], epoch)
+        return create_subjects_method(parents[0:1], epoch)
 
     if 0 < life_model.elite_strategy * previous_population_length <= len(parents):
-        offspring = create_subjects(parents[:math.ceil(life_model.elite_strategy * previous_population_length)], epoch)
+        offspring = create_subjects_method(
+            parents[:math.ceil(life_model.elite_strategy * previous_population_length)],
+            epoch
+        )
 
     # Subjects kept by elite strategy are not included in operations below
     for index in range(len(offspring)):
         subject = offspring[index]
-        mutate(subject, life_model.mutation.type, life_model.mutation.probability)
+        mutate(subject, life_model.mutation.type, life_model.mutation.probability, life_model.function)
         inverse(subject, life_model.inversion.probability)
 
     for index in range(len(parents)):
         subject = [parents[index]]
         if random.random() <= life_model.hybridization.probability:
             subject = crossover(parents, index, life_model, epoch)
-        subject = [mutate(item, life_model.mutation.type, life_model.mutation.probability) for item in subject]
+        subject = [mutate(item, life_model.mutation.type, life_model.mutation.probability, life_model.function) for item
+                   in subject]
         subject = [inverse(item, life_model.inversion.probability) for item in subject]
         for item in subject:
             offspring.append(item)
@@ -49,9 +74,9 @@ def create_offspring(life_model, parents, epoch, previous_population_length):
 
 
 def get_non_self_random_index(range_end, index):
-    rand = random.randint(0, range_end-1)
+    rand = random.randint(0, range_end - 1)
     while rand == index:
-        rand = random.randint(0, range_end-1)
+        rand = random.randint(0, range_end - 1)
     return rand
 
 
@@ -166,20 +191,58 @@ def homogeneous_crossover(chromosomes, partner_chromosomes, children):
     return children
 
 
+def arithmetic_crossover(chromosomes, partner_chromosomes, children):
+    factor = random.random()
+
+    for chromosome_index in range(len(chromosomes)):
+        [boy_chromosome, girl_chromosome] = create_chromosomes(chromosomes[chromosome_index].size, children)
+        boy_chromosome.real_value = factor * chromosomes[chromosome_index].real_value + (1 - factor) * \
+                                    partner_chromosomes[chromosome_index].real_value
+        girl_chromosome.real_value = (1 - factor) * chromosomes[chromosome_index].real_value + factor * \
+                                     partner_chromosomes[chromosome_index].real_value
+
+        boy_chromosome.save()
+        girl_chromosome.save()
+
+    return children
+
+
+def heuristic_crossover(chromosomes, partner_chromosomes, life_model, epoch):
+    child = Subject(
+        name=''.join(random.choice(string.ascii_lowercase) for j in range(10)),
+        population=life_model.population,
+        epoch=epoch)
+    child.save()
+    factor = random.random()
+
+    for index in range(len(chromosomes)):
+        chromosome = Chromosome(subject=child)
+        chromosome.real_value = factor * abs(
+            partner_chromosomes[index].real_value - chromosomes[index].real_value) + min(
+            partner_chromosomes[index].real_value,
+            chromosomes[index].real_value)
+        chromosome.save()
+
+    return [child]
+
+
 def crossover(parents, index, life_model, epoch):
     partner_index = get_non_self_random_index(len(parents), index)
     partner = parents[partner_index]
     chromosomes = Chromosome.objects.filter(subject=parents[index])
     partner_chromosomes = Chromosome.objects.filter(subject=partner)
-    children = create_sibilings(life_model, epoch)
 
     if life_model.hybridization.type == 'SINGLE':
-        return single_crossover(chromosomes, partner_chromosomes, children)
+        return single_crossover(chromosomes, partner_chromosomes, create_sibilings(life_model, epoch))
     if life_model.hybridization.type == 'DOUBLE':
-        return double_crossover(chromosomes, partner_chromosomes, children)
+        return double_crossover(chromosomes, partner_chromosomes, create_sibilings(life_model, epoch))
     if life_model.hybridization.type == 'TRIPLE':
-        return triple_crossover(chromosomes, partner_chromosomes, children)
+        return triple_crossover(chromosomes, partner_chromosomes, create_sibilings(life_model, epoch))
     if life_model.hybridization.type == 'HOMO':
-        return homogeneous_crossover(chromosomes, partner_chromosomes, children)
+        return homogeneous_crossover(chromosomes, partner_chromosomes, create_sibilings(life_model, epoch))
+    if life_model.hybridization.type == 'ARITHMETIC':
+        return arithmetic_crossover(chromosomes, partner_chromosomes, create_sibilings(life_model, epoch))
+    if life_model.hybridization.type == 'HEURISTIC':
+        return heuristic_crossover(chromosomes, partner_chromosomes, life_model, epoch)
 
     return False
