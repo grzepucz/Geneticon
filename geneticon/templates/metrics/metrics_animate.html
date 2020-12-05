@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    {% load static %}
+    <link href="{% static 'geneticon/css/metrics.css' %}" rel="stylesheet">
+    <title>Metrics - Genetic Algorithms</title>
+{% endblock %}
+
+{% block body %}
+    <div class="menu_navigate">
+        <a class="back_button" href="{% url 'life' life_id %}" alt="Back to life analyse"></a>
+        <div class="epoch_number">Epoch: </div>
+        {% include 'metrics/epoch_form.html' %}
+    </div>
+    <div class="content">
+        <div class="mean">
+            <div class="mean__label">Mean function value:</div>
+            <div class="mean__value" id="mean"></div>
+        </div>
+        <div class="deviation">
+            <div class="deviation__label">Standard deviation value:</div>
+            <div class="deviation__value" id="deviation"></div>
+        </div>
+        {% for data, statistics in plot_data %}
+            <div class="hidden"
+                 id="data-{{ forloop.counter }}"
+                 data-x="{{ data.0 }}"
+                 data-y="{{ data.1 }}"
+                 data-z="{{ data.2 }}"
+                 data-mean="{{ statistics.0 }}"
+                 data-deviation="{{ statistics.1 }}"
+            ></div>
+        {% empty %}
+        {% endfor %}
+        <div id="plot"
+             class="plot">
+        </div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+    <script src="{% static 'geneticon/js/metrics_animation.js' %}"></script>
+{% endblock %}

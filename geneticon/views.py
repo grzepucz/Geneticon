@@ -94,15 +94,14 @@ def epoch_clean(request, life_id, epoch_number):
 
 
 def epoch_metrics(request, life_id, epoch_number):
-    epoch_numbers_ = get_epoch_numbers(life_id, epoch_number)
+    epoch_numbers_ = get_epoch_numbers(life_id)
     if request.method == 'POST':
         form = EpochForm(epoch_numbers_, request.POST)
         if form.is_valid():
             return HttpResponseRedirect('/life/'
                                         + str(life_id)
-                                        + '/epoch/'
-                                        + str(form.data['epoch_number'])
-                                        + '/metrics')
+                                        + '/metrics/epoch/'
+                                        + str(form.data['epoch_number']))
     else:
         form = EpochForm(epoch_numbers_, initial={'epoch_number': epoch_number})
     life_model = get_object_or_404(Life, id=life_id)
@@ -121,4 +120,28 @@ def epoch_metrics(request, life_id, epoch_number):
         'data_x': data_x,
         'data_y': data_y,
         'data_z': data_z
+    }, content_type='text/html')
+
+
+def epoch_metrics_animate(request, life_id):
+    epoch_numbers_ = get_epoch_numbers(life_id)
+    if request.method == 'POST':
+        form = EpochForm(epoch_numbers_, request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/life/'
+                                        + str(life_id)
+                                        + '/metrics/epoch/'
+                                        + str(form.data['epoch_number']))
+    else:
+        form = EpochForm(epoch_numbers_, initial={'epoch_number': 1})
+    life_model = get_object_or_404(Life, id=life_id)
+    epochs = Epoch.objects.filter(life=life_model)
+    generations = [get_generation(life_model, epoch) for epoch in epochs]
+    plot_data = [(create_data_plot_attributes(generation), get_statistics(generation)) for generation in generations]
+
+    return render(request, 'metrics/metrics_animate.html', {
+        'epoch_form': form,
+        'life_id': life_id,
+        'plot_data': plot_data,
+        'epoch': epochs[0]
     }, content_type='text/html')
