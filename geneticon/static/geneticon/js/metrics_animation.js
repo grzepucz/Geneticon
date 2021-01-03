@@ -7,14 +7,14 @@ $epoch_selection[0].value = 0;  // easiest init
 const unserializeData = (attribute, id) => $(`#${id}`).data(attribute);
 
 const selectNextFrame = () => {
-    const value = parseInt($epoch_selection[0].value);
+    const value = parseInt($epoch_selection[0].value) || 0;
     $epoch_selection[0].value = value + 1 > epochs_number ? 1 : value + 1;
     const dataId = `data-${$epoch_selection[0].value}`;
     updateStatistics(dataId);
     drawPlot(dataId);
 };
 
-let nextFrameInterval = setInterval(selectNextFrame, 5000);
+let nextFrameInterval = setInterval(selectNextFrame, 2000);
 
 const updateStatistics = dataId => {
     $mean[0].innerText = unserializeData('mean', dataId)
