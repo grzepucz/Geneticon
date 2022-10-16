@@ -26,5 +26,5 @@ def get_statistics(generation):
     return [mean, deviation]
 
 
-def get_epoch_numbers(life_id, epoch_number):
+def get_epoch_numbers(life_id):
     return [(epoch.number, epoch.number) for epoch in Epoch.objects.filter(life_id=life_id)]
